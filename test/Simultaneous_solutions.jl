@@ -42,17 +42,17 @@ domain = Fresa.Domain(lower, upper)
 
 p0 =  [
       Fresa.Point(JacketReactor.PiecewiseLinearProfile(fill(0.5, JacketReactor.N), fill(0.0, JacketReactor.N), JacketReactor.T_f), 
-      JacketReactor.objective),
+      JacketReactor.objective_J2_J1),
       Fresa.Point(JacketReactor.PiecewisePolynomialProfile(
       0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.25 * JacketReactor.L, 0.5 * JacketReactor.L, 0.75 * JacketReactor.L),
-      JacketReactor.objective),
+      JacketReactor.objective_J2_J1),
       Fresa.Point(JacketReactor.QuadraticSplineProfile(JacketReactor.T_f, JacketReactor.T_f, 0.5),
-      JacketReactor.objective)
+      JacketReactor.objective_J2_J1)
       ]
 
 nondominated, population = Fresa.solve(
         # the first 3 arguments are required
-        JacketReactor.objective, # the objective function
+        JacketReactor.objective_J2_J1, # the objective function
         p0;                      # an initial point in the design space
         domain,         # search domain for the decision variables
         # the rest are option arguments for Fresa
@@ -61,7 +61,7 @@ nondominated, population = Fresa.solve(
         ϵ = 0.001,               # tolerance for similarity detection
         fitnesstype = :hadamard, # how to rank solutions in multi-objective case
         multithreading = true,   # use multiple threads, if available
-        ngen = 10000,             # number of generations
+        ngen = 1000,             # number of generations
         #nfmax = 100000,         # number of function evaluations
         np = (40, 100),          # propagation size
         nrmax = 5,               # number of runners maximum

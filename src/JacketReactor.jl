@@ -21,7 +21,7 @@ global const L :: Float64 = 1.0
 global const K :: Float64 = 250000.0
 
 # PWL constants
-global const N :: UInt64 = 5
+global const N :: UInt64 = 50
 global const ΔTw_max :: Float64 = 1.0
 
 # PWP constants
@@ -214,7 +214,7 @@ function input(profile :: QuadraticSplineProfile, z :: Float64) :: Float64
     return Tw
 end
 
-function objective(profile :: TemperatureProfile)
+function objective_J1_J2(profile :: TemperatureProfile)
     results = simulation(profile)
 
     x_vals = results.u
@@ -240,6 +240,34 @@ function objective(profile :: TemperatureProfile)
 
     return ([J1, J2], g)
 end
+
+function objective_J2_J1(profile :: TemperatureProfile)
+    results = simulation(profile)
+
+    x_vals = results.u
+
+    x_end = x_vals[end]
+    J1 = c_f * (1 - x_end[1])
+    J2 = (T_f * x_end[2]^2) / K
+
+    g = 0.0
+    for i in 1:length(results.u)
+        Tw = input(profile, results.t[i])
+        x = x_vals[i]
+        x2 = x[2]
+
+        g = max(
+            g,
+            Tw - T_wmax,
+            T_wmin - Tw,
+            x2 - (T_max / T_f - 1),
+            (T_min / T_f - 1) - x2
+        )
+    end
+
+    return ([J2, J1], g)
+end
+
 
 function Fresa.neighbour(x :: PiecewiseLinearProfile, f :: Float64, domain)
     a = domain.lower(x)

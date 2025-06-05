@@ -6,6 +6,6 @@ domain = Fresa.Domain(
 )
 
 p0 = [Fresa.Point(JacketReactor.QuadraticSplineProfile(JacketReactor.T_f, JacketReactor.T_f, 0.5),
-                  JacketReactor.objective)]
+                  JacketReactor.objective_J1_J2)]
 
 nondominated, population = JacketReactor.solve(p0, domain)

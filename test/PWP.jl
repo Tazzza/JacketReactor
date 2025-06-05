@@ -25,6 +25,6 @@ domain_pwp = Fresa.Domain(
 
 p0_pwp = [JacketReactor.Fresa.Point(JacketReactor.PiecewisePolynomialProfile(
     0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.25 * JacketReactor.L, 0.5 * JacketReactor.L, 0.75 * JacketReactor.L),
-    JacketReactor.objective)]
+    JacketReactor.objective_J1_J2)]
 
 nondominated, population = JacketReactor.solve(p0_pwp, domain_pwp)
