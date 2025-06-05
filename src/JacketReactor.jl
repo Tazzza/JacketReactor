@@ -235,24 +235,24 @@ end
 
 function solve(p0, domain :: Fresa.Domain)
     Fresa.solve(
-        # the first 4 arguments are required
+        # the first 2 arguments are required
         objective,               # the objective function
         p0;                      # an initial point in the design space
-        domain = domain,         # search domain for the decision variables
         # the rest are option arguments for Fresa
+        domain = domain,         # search domain for the decision variables
         archiveelite = false,    # save thinned out elite members
         elite = true,            # elitism by default
         ϵ = 0.001,               # tolerance for similarity detection
         fitnesstype = :hadamard, # how to rank solutions in multi-objective case
         multithreading = true,   # use multiple threads, if available
         ngen = 200,              # number of generations
-        #nfmax = 100000,
+        #nfmax = 100000,         # number of function evaluations
         np = (40, 100),          # propagation size
         nrmax = 5,               # number of runners maximum
-        ns = 100,)
+        ns = 100,)               # number of stable solutions for stopping
         #plotvectors = true,
         #populationoutput = true)  
-                               # number of stable solutions for stopping      
+                                     
 end
 
 end
