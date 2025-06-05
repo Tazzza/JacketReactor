@@ -273,6 +273,4 @@ p0_pwp = [Fresa.Point(PiecewisepolynomialProfile(
     0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.25 * L, 0.5 * L, 0.75 * L),
     objective)]
 
-nondominated, population = solve(p0_pwp, domain_pwp)
-
 end
