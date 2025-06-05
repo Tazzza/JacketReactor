@@ -113,7 +113,6 @@ end
 #------------------------------------
 # PWP
 #------------------------------------
-
 mutable struct PiecewisePolynomialProfile <: TemperatureProfile
     T_w0 :: Float64
     T_w1 :: Float64
@@ -179,6 +178,39 @@ function input(profile :: PiecewisePolynomialProfile, z :: Float64) :: Float64
         Tw = T_wmin
     end
 
+    return Tw
+end
+
+#------------------------------------
+# QSP
+#------------------------------------
+mutable struct QuadraticSplineProfile <: TemperatureProfile
+    T_w0 :: Float64               
+    T_wf :: Float64               
+    z1 :: Float64               
+    a :: Float64                
+    b :: Float64
+    c :: Float64
+    d :: Float64
+    e :: Float64
+    f :: Float64
+    function QuadraticSplineProfile(T_w0, T_wf, z1)
+        a = T_w0
+        b = 0
+        c = (T_wf-T_w0)/z1
+        d = (T_wf*z1 - T_w0) / (z1 - 1)
+        e = (2*T_w0 - 2*T_wf) / (z1 - 1)
+        f = (T_wf - T_w0) / (z1 - 1)
+        new(T_w0, T_wf, z1, a, b, c, d, e, f)
+    end
+end
+
+function input(profile :: QuadraticSplineProfile, z :: Float64) :: Float64
+    if z <= profile.z1
+        Tw = profile.a + profile.b*z + profile.c*z^2
+    else
+        Tw = profile.d + profile.e*z + profile.f*z^2
+    end
     return Tw
 end
 
