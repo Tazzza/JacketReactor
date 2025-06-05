@@ -6,7 +6,7 @@ This code uses the Plant Propagation Algorithm [Fresa](https://www.ucl.ac.uk/~uc
 
 ## Solution Representations
 
-This code currently uses two solution representations, a piecewise linear approach and a piecewise polynomial approach.
+This code currently uses 3 solution representations, a piecewise linear approach, a piecewise polynomial approach and a quadratic spline approach.
 
 ### Piecewise Linear
 
@@ -14,4 +14,8 @@ The piecewise linear framework is simply a uniform discretisation of the length 
 
 ### Piecewise Polynomial
 
-The piecewise polynomial framework splits the length axis into sub-domains, filling each with a cubic polynomial. These temperature values and gradients are matched between sub-domains, resulting in a smooth, continuous function. 
+The piecewise polynomial framework splits the length axis into 3 sub-domains, filling each with a cubic polynomial. These temperature values and gradients are matched between sub-domains, resulting in a smooth, continuous function. 
+
+### Quadratic Spline
+
+The quadratic spline framework splits the length axis into 2 sub-domains, filling each with a quadratic polynomial. Similarly to the piecewise polynomial idea, the gradients and temperature values are equated.

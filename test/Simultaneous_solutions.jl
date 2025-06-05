@@ -12,8 +12,8 @@ function lower(profile :: JacketReactor.TemperatureProfile)
         JacketReactor.z1_min, 
         JacketReactor.z2_min, 
         JacketReactor.z3_min)
-    #elseif typeof(profile) == JacketReactor.PiecewiseLinearProfile
-    #    JacketReactor.PiecewiseLinearProfile(zeros(length(profile.fz)), -ones(length(profile.fT)), JacketReactor.T_wmin)
+    elseif typeof(profile) == JacketReactor.PiecewiseLinearProfile
+        JacketReactor.PiecewiseLinearProfile(zeros(length(profile.fz)), -ones(length(profile.fT)), JacketReactor.T_wmin)
     elseif typeof(profile) == JacketReactor.QuadraticSplineProfile
         JacketReactor.QuadraticSplineProfile(JacketReactor.T_wmin, JacketReactor.T_wmax, 0.25)
     end
@@ -31,8 +31,8 @@ function upper(profile :: JacketReactor.TemperatureProfile)
         JacketReactor.z1_max, 
         JacketReactor.z2_max, 
         JacketReactor.z3_max)
-    #elseif typeof(profile) == JacketReactor.PiecewiseLinearProfile
-    #    JacketReactor.PiecewiseLinearProfile(ones(length(profile.fz)), ones(length(profile.fT)), JacketReactor.T_wmax)
+    elseif typeof(profile) == JacketReactor.PiecewiseLinearProfile
+        JacketReactor.PiecewiseLinearProfile(ones(length(profile.fz)), ones(length(profile.fT)), JacketReactor.T_wmax)
     elseif typeof(profile) == JacketReactor.QuadraticSplineProfile
         JacketReactor.QuadraticSplineProfile(JacketReactor.T_wmin, JacketReactor.T_wmax, 0.75)
     end
@@ -41,8 +41,8 @@ end
 domain = Fresa.Domain(lower, upper)
 
 p0 =  [
-      #Fresa.Point(JacketReactor.PiecewiseLinearProfile(fill(0.5, JacketReactor.N), fill(0.0, JacketReactor.N), JacketReactor.T_f), 
-      #JacketReactor.objective),
+      Fresa.Point(JacketReactor.PiecewiseLinearProfile(fill(0.5, JacketReactor.N), fill(0.0, JacketReactor.N), JacketReactor.T_f), 
+      JacketReactor.objective),
       Fresa.Point(JacketReactor.PiecewisePolynomialProfile(
       0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.25 * JacketReactor.L, 0.5 * JacketReactor.L, 0.75 * JacketReactor.L),
       JacketReactor.objective),
@@ -61,7 +61,7 @@ nondominated, population = Fresa.solve(
         ϵ = 0.001,               # tolerance for similarity detection
         fitnesstype = :hadamard, # how to rank solutions in multi-objective case
         multithreading = true,   # use multiple threads, if available
-        ngen = 1000,             # number of generations
+        ngen = 10000,             # number of generations
         #nfmax = 100000,         # number of function evaluations
         np = (40, 100),          # propagation size
         nrmax = 5,               # number of runners maximum
