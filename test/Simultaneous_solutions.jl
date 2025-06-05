@@ -1,9 +1,7 @@
 using Fresa
 
 function lower(profile :: JacketReactor.TemperatureProfile)
-    if typeof(profile) == JacketReactor.PiecewiseLinearProfile
-        JacketReactor.PiecewiseLinearProfile(zeros(length(profile.fz)), -ones(length(profile.fT)), JacketReactor.T_wmin)
-    else
+    if typeof(profile) == JacketReactor.PiecewisepolynomialProfile
         JacketReactor.PiecewisepolynomialProfile(
         JacketReactor.T_w0min, 
         JacketReactor.T_w1min, 
@@ -14,13 +12,13 @@ function lower(profile :: JacketReactor.TemperatureProfile)
         JacketReactor.z1_min, 
         JacketReactor.z2_min, 
         JacketReactor.z3_min)
+    else
+        JacketReactor.PiecewiseLinearProfile(zeros(length(profile.fz)), -ones(length(profile.fT)), JacketReactor.T_wmin)
     end
 end
 
 function upper(profile :: JacketReactor.TemperatureProfile)
-    if typeof(profile) == JacketReactor.PiecewiseLinearProfile
-        JacketReactor.PiecewiseLinearProfile(ones(length(profile.fz)), ones(length(profile.fT)), JacketReactor.T_wmax)
-    else
+    if typeof(profile) == JacketReactor.PiecewisepolynomialProfile
         JacketReactor.PiecewisepolynomialProfile(
         JacketReactor.T_w0max, 
         JacketReactor.T_w1max, 
@@ -31,6 +29,8 @@ function upper(profile :: JacketReactor.TemperatureProfile)
         JacketReactor.z1_max, 
         JacketReactor.z2_max, 
         JacketReactor.z3_max)
+    else
+        JacketReactor.PiecewiseLinearProfile(ones(length(profile.fz)), ones(length(profile.fT)), JacketReactor.T_wmax)
     end
 end
 
@@ -70,10 +70,10 @@ for idx in nondominated
     sol = population[idx]
     if sol.x isa JacketReactor.PiecewiseLinearProfile
         pwl_count += 1
-    elseif sol.x isa JacketReactor.PiecewisePolynomialProfile
+    elseif sol.x isa JacketReactor.PiecewisepolynomialProfile
         pwp_count += 1
     end
 end
 
 println("Number of PiecewiseLinearProfile solutions: ", pwl_count)
-println("Number of PiecewisePolynomialProfile solutions: ", pwp_count)
+println("Number of PiecewisepolynomialProfile solutions: ", pwp_count)
