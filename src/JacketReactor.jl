@@ -21,7 +21,7 @@ global const L :: Float64 = 1.0
 global const K :: Float64 = 250000.0
 
 # PWL constants
-global const N :: UInt64 = 50
+global const N :: UInt64 = 5
 global const ΔTw_max :: Float64 = 1.0
 
 # PWP constants

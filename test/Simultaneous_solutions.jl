@@ -21,7 +21,7 @@ function upper(profile :: JacketReactor.TemperatureProfile)
     if typeof(profile) == JacketReactor.PiecewiseLinearProfile
         JacketReactor.PiecewiseLinearProfile(ones(length(profile.fz)), ones(length(profile.fT)), JacketReactor.T_wmax)
     else
-        PiecewisepolynomialProfile(
+        JacketReactor.PiecewisepolynomialProfile(
         JacketReactor.T_w0max, 
         JacketReactor.T_w1max, 
         JacketReactor.T_w2max, 
@@ -59,3 +59,21 @@ nondominated, population = Fresa.solve(
         nrmax = 5,               # number of runners maximum
         ns = 100,)
 
+println("Nondominated points:\n")
+println("$(population[nondominated])")
+println("There are $(length(population[nondominated])) solutions")
+
+pwl_count = 0
+pwp_count = 0
+
+for idx in nondominated
+    sol = population[idx]
+    if sol.x isa JacketReactor.PiecewiseLinearProfile
+        pwl_count += 1
+    elseif sol.x isa JacketReactor.PiecewisePolynomialProfile
+        pwp_count += 1
+    end
+end
+
+println("Number of PiecewiseLinearProfile solutions: ", pwl_count)
+println("Number of PiecewisePolynomialProfile solutions: ", pwp_count)
