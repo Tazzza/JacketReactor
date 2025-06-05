@@ -10,9 +10,7 @@ This code currently uses two solution representations, a piecewise linear approa
 
 ### Piecewise Linear
 
-The piecewise linear framework is simply a uniform discretisation of the length axis, controlled by a `global const N`.
-
-The level of discretisation can be adjusted in the `JacketReactor.jl` file.
+The piecewise linear framework is simply a uniform discretisation of the length axis, controlled by a `global const N`. The level of discretisation can be adjusted in the `JacketReactor.jl` file.
 
 ### Piecewise Polynomial
 
