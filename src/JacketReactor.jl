@@ -255,22 +255,4 @@ function solve(p0, domain :: Fresa.Domain)
                                # number of stable solutions for stopping      
 end
 
-domain_pwl = Fresa.Domain(
-    x -> PiecewiseLinearProfile(zeros(length(x.fz)), -ones(length(x.fT)), T_wmin),
-    x -> PiecewiseLinearProfile(ones(length(x.fz)), ones(length(x.fT)), T_wmax)
-)
-
-domain_pwp = Fresa.Domain(
-    _ -> PiecewisepolynomialProfile(
-        T_w0min, T_w1min, T_w2min, T_wfmin, T_w1prime_min, T_w2prime_min, z1_min, z2_min, z3_min),
-    _ -> PiecewisepolynomialProfile(
-        T_w0max, T_w1max, T_w2max, T_wfmax, T_w1prime_max, T_w2prime_min, z1_max, z2_max, z3_max)
-)
-
-p0_pwl = [Fresa.Point(PiecewiseLinearProfile(fill(0.5, N), fill(0.0, N), T_f), objective)]
-
-p0_pwp = [Fresa.Point(PiecewisepolynomialProfile(
-    0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.25 * L, 0.5 * L, 0.75 * L),
-    objective)]
-
 end
