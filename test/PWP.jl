@@ -1,7 +1,7 @@
 using Fresa
 
 domain_pwp = Fresa.Domain(
-    _ -> JacketReactor.PiecewisepolynomialProfile(
+    _ -> JacketReactor.PiecewisePolynomialProfile(
         JacketReactor.T_w0min, 
         JacketReactor.T_w1min, 
         JacketReactor.T_w2min, 
@@ -11,7 +11,7 @@ domain_pwp = Fresa.Domain(
         JacketReactor.z1_min, 
         JacketReactor.z2_min, 
         JacketReactor.z3_min),
-    _ -> JacketReactor.PiecewisepolynomialProfile(
+    _ -> JacketReactor.PiecewisePolynomialProfile(
         JacketReactor.T_w0max, 
         JacketReactor.T_w1max, 
         JacketReactor.T_w2max, 
@@ -23,7 +23,7 @@ domain_pwp = Fresa.Domain(
         JacketReactor.z3_max)
 )
 
-p0_pwp = [JacketReactor.Fresa.Point(JacketReactor.PiecewisepolynomialProfile(
+p0_pwp = [JacketReactor.Fresa.Point(JacketReactor.PiecewisePolynomialProfile(
     0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.25 * JacketReactor.L, 0.5 * JacketReactor.L, 0.75 * JacketReactor.L),
     JacketReactor.objective)]
 

@@ -114,7 +114,7 @@ end
 # PWP
 #------------------------------------
 
-mutable struct PiecewisepolynomialProfile <: TemperatureProfile
+mutable struct PiecewisePolynomialProfile <: TemperatureProfile
     T_w0 :: Float64
     T_w1 :: Float64
     T_w2 :: Float64
@@ -139,7 +139,7 @@ mutable struct PiecewisepolynomialProfile <: TemperatureProfile
     gamma3 :: Float64
     zeta3 :: Float64
 
-    function PiecewisepolynomialProfile(T_w0, T_w1, T_w2, T_wf, T_w1prime, T_w2prime, z1, z2, z3)
+    function PiecewisePolynomialProfile(T_w0, T_w1, T_w2, T_wf, T_w1prime, T_w2prime, z1, z2, z3)
         # Define constants
         alpha1 = T_w0
         beta1 = 0
@@ -164,7 +164,7 @@ mutable struct PiecewisepolynomialProfile <: TemperatureProfile
     end
 end
 
-function input(profile :: PiecewisepolynomialProfile, z :: Float64) :: Float64
+function input(profile :: PiecewisePolynomialProfile, z :: Float64) :: Float64
     if z <= profile.z1
         Tw = profile.alpha1 + profile.beta1 * z + profile.gamma1 * z^2 + profile.zeta1 * z^3
     elseif z > profile.z1 && z <= profile.z2
@@ -218,7 +218,7 @@ function Fresa.neighbour(x :: PiecewiseLinearProfile, f :: Float64, domain)
     return PiecewiseLinearProfile(fz, fT, T0)
 end
 
-function Fresa.neighbour(x :: PiecewisepolynomialProfile, f :: Float64, domain)
+function Fresa.neighbour(x :: PiecewisePolynomialProfile, f :: Float64, domain)
     a = domain.lower(x)
     b = domain.upper(x)
     T_w0 = Fresa.neighbour(x.T_w0, f, Fresa.Domain(_ -> a.T_w0, _ -> b.T_w0))
@@ -230,7 +230,7 @@ function Fresa.neighbour(x :: PiecewisepolynomialProfile, f :: Float64, domain)
     z1 = Fresa.neighbour(x.z1, f, Fresa.Domain(_ -> a.z1, _ -> b.z1))
     z2 = Fresa.neighbour(x.z2, f, Fresa.Domain(_ -> a.z2, _ -> b.z2))
     z3 = Fresa.neighbour(x.z3, f, Fresa.Domain(_ -> a.z3, _ -> b.z3))
-    PiecewisepolynomialProfile(T_w0, T_w1, T_w2, T_wf, T_w1prime, T_w2prime, z1, z2, z3)
+    PiecewisePolynomialProfile(T_w0, T_w1, T_w2, T_wf, T_w1prime, T_w2prime, z1, z2, z3)
 end
 
 function solve(p0, domain :: Fresa.Domain)

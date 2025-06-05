@@ -1,8 +1,8 @@
 using Fresa
 
 function lower(profile :: JacketReactor.TemperatureProfile)
-    if typeof(profile) == JacketReactor.PiecewisepolynomialProfile
-        JacketReactor.PiecewisepolynomialProfile(
+    if typeof(profile) == JacketReactor.PiecewisePolynomialProfile
+        JacketReactor.PiecewisePolynomialProfile(
         JacketReactor.T_w0min, 
         JacketReactor.T_w1min, 
         JacketReactor.T_w2min, 
@@ -18,8 +18,8 @@ function lower(profile :: JacketReactor.TemperatureProfile)
 end
 
 function upper(profile :: JacketReactor.TemperatureProfile)
-    if typeof(profile) == JacketReactor.PiecewisepolynomialProfile
-        JacketReactor.PiecewisepolynomialProfile(
+    if typeof(profile) == JacketReactor.PiecewisePolynomialProfile
+        JacketReactor.PiecewisePolynomialProfile(
         JacketReactor.T_w0max, 
         JacketReactor.T_w1max, 
         JacketReactor.T_w2max, 
@@ -38,7 +38,7 @@ domain = Fresa.Domain(lower, upper)
 
 p0 = [Fresa.Point(JacketReactor.PiecewiseLinearProfile(fill(0.5, JacketReactor.N), fill(0.0, JacketReactor.N), JacketReactor.T_f), 
       JacketReactor.objective),
-      Fresa.Point(JacketReactor.PiecewisepolynomialProfile(
+      Fresa.Point(JacketReactor.PiecewisePolynomialProfile(
     0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.25 * JacketReactor.L, 0.5 * JacketReactor.L, 0.75 * JacketReactor.L),
     JacketReactor.objective)]
 
@@ -51,7 +51,7 @@ nondominated, population = Fresa.solve(
         archiveelite = false,    # save thinned out elite members
         elite = true,            # elitism by default
         ϵ = 0.001,               # tolerance for similarity detection
-        fitnesstype = :hadamard, # how to rank solutions in multi-objective case
+        fitnesstype = :borda, # how to rank solutions in multi-objective case
         multithreading = true,   # use multiple threads, if available
         ngen = 1000,             # number of generations
         #nfmax = 100000,         # number of function evaluations
@@ -70,10 +70,10 @@ for idx in nondominated
     sol = population[idx]
     if sol.x isa JacketReactor.PiecewiseLinearProfile
         pwl_count += 1
-    elseif sol.x isa JacketReactor.PiecewisepolynomialProfile
+    elseif sol.x isa JacketReactor.PiecewisePolynomialProfile
         pwp_count += 1
     end
 end
 
 println("Number of PiecewiseLinearProfile solutions: ", pwl_count)
-println("Number of PiecewisepolynomialProfile solutions: ", pwp_count)
+println("Number of PiecewisePolynomialProfile solutions: ", pwp_count)
