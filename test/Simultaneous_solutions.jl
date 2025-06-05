@@ -12,8 +12,10 @@ function lower(profile :: JacketReactor.TemperatureProfile)
         JacketReactor.z1_min, 
         JacketReactor.z2_min, 
         JacketReactor.z3_min)
-    else
-        JacketReactor.PiecewiseLinearProfile(zeros(length(profile.fz)), -ones(length(profile.fT)), JacketReactor.T_wmin)
+    #elseif typeof(profile) == JacketReactor.PiecewiseLinearProfile
+    #    JacketReactor.PiecewiseLinearProfile(zeros(length(profile.fz)), -ones(length(profile.fT)), JacketReactor.T_wmin)
+    elseif typeof(profile) == JacketReactor.QuadraticSplineProfile
+        JacketReactor.QuadraticSplineProfile(JacketReactor.T_wmin, JacketReactor.T_wmax, 0.25)
     end
 end
 
@@ -29,18 +31,24 @@ function upper(profile :: JacketReactor.TemperatureProfile)
         JacketReactor.z1_max, 
         JacketReactor.z2_max, 
         JacketReactor.z3_max)
-    else
-        JacketReactor.PiecewiseLinearProfile(ones(length(profile.fz)), ones(length(profile.fT)), JacketReactor.T_wmax)
+    #elseif typeof(profile) == JacketReactor.PiecewiseLinearProfile
+    #    JacketReactor.PiecewiseLinearProfile(ones(length(profile.fz)), ones(length(profile.fT)), JacketReactor.T_wmax)
+    elseif typeof(profile) == JacketReactor.QuadraticSplineProfile
+        JacketReactor.QuadraticSplineProfile(JacketReactor.T_wmin, JacketReactor.T_wmax, 0.75)
     end
 end
 
 domain = Fresa.Domain(lower, upper)
 
-p0 = [Fresa.Point(JacketReactor.PiecewiseLinearProfile(fill(0.5, JacketReactor.N), fill(0.0, JacketReactor.N), JacketReactor.T_f), 
-      JacketReactor.objective),
+p0 =  [
+      #Fresa.Point(JacketReactor.PiecewiseLinearProfile(fill(0.5, JacketReactor.N), fill(0.0, JacketReactor.N), JacketReactor.T_f), 
+      #JacketReactor.objective),
       Fresa.Point(JacketReactor.PiecewisePolynomialProfile(
-    0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.25 * JacketReactor.L, 0.5 * JacketReactor.L, 0.75 * JacketReactor.L),
-    JacketReactor.objective)]
+      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.25 * JacketReactor.L, 0.5 * JacketReactor.L, 0.75 * JacketReactor.L),
+      JacketReactor.objective),
+      Fresa.Point(JacketReactor.QuadraticSplineProfile(JacketReactor.T_f, JacketReactor.T_f, 0.5),
+      JacketReactor.objective)
+      ]
 
 nondominated, population = Fresa.solve(
         # the first 3 arguments are required
@@ -51,7 +59,7 @@ nondominated, population = Fresa.solve(
         archiveelite = false,    # save thinned out elite members
         elite = true,            # elitism by default
         ϵ = 0.001,               # tolerance for similarity detection
-        fitnesstype = :borda, # how to rank solutions in multi-objective case
+        fitnesstype = :hadamard, # how to rank solutions in multi-objective case
         multithreading = true,   # use multiple threads, if available
         ngen = 1000,             # number of generations
         #nfmax = 100000,         # number of function evaluations
@@ -65,6 +73,7 @@ println("There are $(length(population[nondominated])) solutions")
 
 pwl_count = 0
 pwp_count = 0
+qsp_count = 0
 
 for idx in nondominated
     sol = population[idx]
@@ -72,8 +81,11 @@ for idx in nondominated
         pwl_count += 1
     elseif sol.x isa JacketReactor.PiecewisePolynomialProfile
         pwp_count += 1
+    elseif sol.x isa JacketReactor.QuadraticSplineProfile
+        qsp_count += 1
     end
 end
 
 println("Number of PiecewiseLinearProfile solutions: ", pwl_count)
 println("Number of PiecewisePolynomialProfile solutions: ", pwp_count)
+println("Number of QuadraticSplineProfile solutions: ", qsp_count)
