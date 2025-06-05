@@ -1,9 +1,7 @@
-# Import packages
+module JacketReactor
+
 using DifferentialEquations # For solving the system of ODEs
-using Plots                 # For plotting
 using Fresa                 # For optimisation
-using Statistics            # For ordering arrays of objective function values
-using Printf                # Saving and formatting output
 
 #------------------------------------
 # Constants in differential equations
@@ -276,3 +274,5 @@ p0_pwp = [Fresa.Point(PiecewisepolynomialProfile(
     objective)]
 
 nondominated, population = solve(p0_pwp, domain_pwp)
+
+end
